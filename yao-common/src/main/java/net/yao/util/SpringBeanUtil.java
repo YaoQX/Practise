@@ -29,7 +29,7 @@ public class SpringBeanUtil {
      * @param <T> 目标对象类型
      * @param sourceList 源对象列表
      * @param target 目标对象列表
-     * @return 复制后目标对象列表
+     * @return 复制后目标对象列表 左边拷出来
      */
     public static <T> List<T> copyProperties(List<?> sourceList, Class<T> target) {
         ArrayList<T> targetList = new ArrayList<>();
