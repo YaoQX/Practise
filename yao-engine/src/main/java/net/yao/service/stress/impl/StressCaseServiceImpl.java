@@ -19,7 +19,9 @@ import net.yao.service.stress.StressCaseService;
 import net.yao.util.JsonData;
 import net.yao.util.SpringBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StressCaseServiceImpl implements StressCaseService {
 
     @Autowired

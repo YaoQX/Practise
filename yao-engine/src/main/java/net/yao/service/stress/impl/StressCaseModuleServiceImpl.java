@@ -13,9 +13,11 @@ import net.yao.service.stress.StressCaseModuleService;
 import net.yao.service.stress.StressCaseService;
 import net.yao.util.SpringBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class StressCaseModuleServiceImpl implements StressCaseModuleService {
 
     @Autowired
