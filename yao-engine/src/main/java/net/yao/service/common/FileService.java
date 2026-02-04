@@ -25,5 +25,5 @@ public interface FileService {
      * @param remoteFilePath
      * @return
      */
-   // String copyRemoteFileToLocalTempFile(String remoteFilePath);
+   String copyRemoteFileToLocalTempFile(String remoteFilePath);
 }

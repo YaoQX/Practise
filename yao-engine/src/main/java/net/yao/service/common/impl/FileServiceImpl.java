@@ -77,9 +77,8 @@ public class FileServiceImpl implements FileService {
      * @return
      */
     public String copyRemoteFileToLocalTempFile(String remoteFilePath) {
-        // 拼接本地临时文件路径
-        String localTempFilePath = System.getProperty("user.dir")+ File.separator+"static"+File.separator
-                + IdUtil.simpleUUID() + FileUtil.getSuffix(remoteFilePath);
+        // 拼接本地临时文件路径 指定文件存放在项目下的 static 文件夹中，要确保不会重复
+        String localTempFilePath = System.getProperty("user.dir")+ File.separator+"static"+File.separator + IdUtil.simpleUUID() + FileUtil.getSuffix(remoteFilePath);
         // 创建临时文件夹
         FileUtil.mkdir(localTempFilePath);
         try {
@@ -103,7 +102,7 @@ public class FileServiceImpl implements FileService {
             // 记录错误日志
             log.error(e.getMessage());
             // 抛出异常：读取远程文件失败
-            throw new RuntimeException("读取远程文件失败");
+            throw new RuntimeException("Read remote file error");
         }
     }
 
