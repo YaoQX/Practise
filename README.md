@@ -1,28 +1,80 @@
-Online Test Systems(Backend)
+# Distributed Cloud Load Testing Platform (Backend)
 
-Self-developed Load Testing Engine Core
+A cloud-native distributed load testing backend platform designed to orchestrate automated performance testing through microservices architecture and API-driven execution.
 
-Decoupled and refactored the core execution logic of JMeter and integrated it into backend services, building an elastic load testing engine controllable via APIs.
+---
 
-Scalable Microservices Architecture
+## 🔧 Self-developed Load Testing Execution Engine
 
-Adopted a microservices architecture using Nacos for service discovery and configuration management.
-Implemented efficient inter-service communication through OpenFeign, ensuring high availability and scalability of the system.
+Decoupled and refactored JMeter’s core execution logic and integrated it into backend services, building an API-driven load testing engine capable of automated and concurrent test execution.
 
-Large-scale Data Storage Solution
+---
 
-Designed an object storage solution using MinIO to handle large-volume performance test reports and artifacts, supporting distributed storage and efficient retrieval.
+## 🏗️ Microservices Architecture Design
 
-QA-Driven Architecture Design (In progress)
+Implemented a microservices architecture using:
 
-Leveraging hands-on QA experience, the platform is designed beyond traditional HTTP load testing.
-Planned integration with Selenium to support UI automation testing, aiming to build a comprehensive end-to-end quality assurance platform.
+- **Nacos** for service discovery and configuration management  
+- **OpenFeign** for inter-service communication  
 
-Advanced Assertion Mechanism (Planned)
+This design improves service decoupling, modular deployment, and system scalability.
 
-Designing a dynamic response validation module based on regular expressions, enabling automated verification of complex business logic responses and improving test accuracy.
+---
 
-Unified Authentication & Security (Planned)
+## 📦 Test Artifact Storage Solution
 
-Planning to integrate Sa-Token to implement lightweight distributed authentication and RBAC authorization, ensuring tenant isolation and system security in multi-tenant environments.
+Designed an object storage system using **MinIO** to manage performance test artifacts such as reports, logs, and execution outputs, enabling centralized storage and efficient retrieval.
 
+---
+
+## 🧪 QA-driven Platform Design *(In progress)*
+
+Leveraging hands-on QA experience, the platform is designed beyond traditional HTTP interface load testing.
+
+Integration with **Selenium** is currently in progress to support UI automation testing and expand end-to-end testing capabilities.
+
+---
+
+## 🧠 Advanced Assertion Mechanism *(Planned)*
+
+Designing a dynamic response validation module based on **regular expressions** to enable automated verification of complex API responses and improve testing reliability.
+
+---
+
+## 🔐 Authentication & Authorization System *(Planned)*
+
+Planning to integrate **Sa-Token** to implement lightweight distributed authentication and RBAC-based authorization, ensuring secure access control and tenant-level isolation.
+
+---
+
+## 🧰 Tech Stack
+
+**Backend**
+
+- Java 17  
+- Spring Boot 3.x  
+- MyBatis-Plus  
+
+**Microservices**
+
+- Spring Cloud Alibaba  
+- Nacos  
+- OpenFeign  
+
+**Testing**
+
+- Apache JMeter  
+- Selenium *(In progress)*  
+
+**Storage**
+
+- MySQL  
+- Redis  
+- MinIO  
+
+**Infrastructure**
+
+- AWS (EC2)  
+- Docker  
+
+---
