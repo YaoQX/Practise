@@ -13,7 +13,7 @@ Large-scale Data Storage Solution
 
 Designed an object storage solution using MinIO to handle large-volume performance test reports and artifacts, supporting distributed storage and efficient retrieval.
 
-QA-Driven Architecture Design (Planned)
+QA-Driven Architecture Design (In progress)
 
 Leveraging hands-on QA experience, the platform is designed beyond traditional HTTP load testing.
 Planned integration with Selenium to support UI automation testing, aiming to build a comprehensive end-to-end quality assurance platform.
