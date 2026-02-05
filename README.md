@@ -4,13 +4,13 @@ A cloud-native distributed load testing backend platform designed to orchestrate
 
 ---
 
-## 🔧 Self-developed Load Testing Execution Engine
+## Self-developed Load Testing Execution Engine
 
 Decoupled and refactored JMeter’s core execution logic and integrated it into backend services, building an API-driven load testing engine capable of automated and concurrent test execution.
 
 ---
 
-## 🏗️ Microservices Architecture Design
+## Microservices Architecture Design
 
 Implemented a microservices architecture using:
 
@@ -21,13 +21,13 @@ This design improves service decoupling, modular deployment, and system scalabil
 
 ---
 
-## 📦 Test Artifact Storage Solution
+## Test Artifact Storage Solution
 
 Designed an object storage system using **MinIO** to manage performance test artifacts such as reports, logs, and execution outputs, enabling centralized storage and efficient retrieval.
 
 ---
 
-## 🧪 QA-driven Platform Design *(In progress)*
+## QA-driven Platform Design *(In progress)*
 
 Leveraging hands-on QA experience, the platform is designed beyond traditional HTTP interface load testing.
 
@@ -35,19 +35,19 @@ Integration with **Selenium** is currently in progress to support UI automation 
 
 ---
 
-## 🧠 Advanced Assertion Mechanism *(Planned)*
+## Advanced Assertion Mechanism *(Planned)*
 
 Designing a dynamic response validation module based on **regular expressions** to enable automated verification of complex API responses and improve testing reliability.
 
 ---
 
-## 🔐 Authentication & Authorization System *(Planned)*
+## Authentication & Authorization System *(Planned)*
 
 Planning to integrate **Sa-Token** to implement lightweight distributed authentication and RBAC-based authorization, ensuring secure access control and tenant-level isolation.
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 **Backend**
 
