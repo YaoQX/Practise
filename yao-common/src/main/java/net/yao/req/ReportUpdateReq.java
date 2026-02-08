@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class ReportUpdateReq {
+
+    /**
+     * id
+     */
+    private Long id;
     /**
      * 项目id
      */

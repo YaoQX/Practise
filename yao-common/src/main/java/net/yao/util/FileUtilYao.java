@@ -1,13 +1,14 @@
 package net.yao.util;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.io.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class FileUtil {
+public class FileUtilYao {
 
     /**
      * 生成文件名 确保文件名不可能重复

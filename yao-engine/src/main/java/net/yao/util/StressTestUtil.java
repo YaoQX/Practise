@@ -12,7 +12,12 @@ public class StressTestUtil {
      */
     public static String getJmeterHome() {
         try {
-            return StressTestUtil.class.getClassLoader().getResource("jmeter").getPath();
+            //return StressTestUtil.class.getClassLoader().getResource("jmeter").getPath();
+            // 使用 toURI() 配合 Paths 可以完美处理空格、中文乱码和 Windows 前缀斜杠问题
+            java.net.URL url = StressTestUtil.class.getClassLoader().getResource("jmeter");
+
+            // 核心修复：先转成 URI，再转成 Path，最后转成字符串
+            return java.nio.file.Paths.get(url.toURI()).toFile().getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

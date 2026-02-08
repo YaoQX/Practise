@@ -1,26 +1,44 @@
 package net.yao.service.stress.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import net.yao.config.KafkaTopicConfig;
 import net.yao.dto.ReportDTO;
 import net.yao.dto.stress.StressCaseDTO;
 import net.yao.enums.BizCodeEnum;
 import net.yao.enums.ReportStateEnum;
 import net.yao.enums.StressSourceTypeEnum;
 import net.yao.enums.TestTypeEnum;
+import net.yao.exception.BizException;
 import net.yao.feign.ReportFeignService;
+import net.yao.mapper.EnvironmentMapper;
 import net.yao.mapper.StressCaseMapper;
 import net.yao.model.EnvironmentDO;
 import net.yao.model.StressCaseDO;
 import net.yao.req.ReportSaveReq;
+import net.yao.req.ReportUpdateReq;
 import net.yao.req.stress.StressCaseDelReq;
 import net.yao.req.stress.StressCaseSaveReq;
 import net.yao.req.stress.StressCaseUpdateReq;
 import net.yao.service.stress.StressCaseService;
+import net.yao.service.stress.core.BaseStressEngine;
+import net.yao.service.stress.core.StressJmxEngine;
+import net.yao.service.stress.core.StressSimpleEngine;
 import net.yao.util.JsonData;
+import net.yao.util.JsonUtil;
 import net.yao.util.SpringBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@Slf4j
 @Service
 public class StressCaseServiceImpl implements StressCaseService {
 
@@ -29,6 +47,18 @@ public class StressCaseServiceImpl implements StressCaseService {
 
     @Autowired
     private ReportFeignService reportFeignService;
+
+    @Resource
+    private EnvironmentMapper environmentMapper;
+
+    @Resource
+    private ApplicationContext applicationContext;
+
+    @Resource
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    // 建议：引入线程池执行压测
+    private static final ExecutorService stressExecutor = Executors.newFixedThreadPool(5);
 
     public StressCaseDTO findById(Long projectId, Long caseId){
         LambdaQueryWrapper<StressCaseDO> wrapper = new LambdaQueryWrapper<>();
@@ -64,12 +94,12 @@ public class StressCaseServiceImpl implements StressCaseService {
      * 【1】查询⽤例详情
      * 【2】初始化测试报告
      * 【3】判断压测类型 JMX、SIMPLE
-     * 【4】初始化测试引ක
+     * 【4】初始化测试引擎
      * 【5】组装测试计划
      * 【6】执⾏压测
-     * 【7】发ᭆ压测结果明细
-     * 【8】压测完成清理数ഝ
-     * 【9】᭗知压测结束
+     * 【7】发送压测结果明细
+     * 【8】压测完成清理数数据
+     * 【9】通知压测结束
      */
     public int execute(Long projectId, Long caseId) {
         LambdaQueryWrapper <StressCaseDO> queryWrapper = new LambdaQueryWrapper<>();
@@ -91,20 +121,59 @@ public class StressCaseServiceImpl implements StressCaseService {
 
                 //判断压测类型 JMX、SIMPLE 无视大小写
                 if (StressSourceTypeEnum.JMX.name().equalsIgnoreCase(stressCaseDO.getStressSourceType())) {
-                    //runSimpleStressCase(stressCaseDO, reportDTO);
+
+                    // 【关键点】在这里发第一条 Kafka 消息，启动 8081 的监控
+                    ReportUpdateReq firstMsg = new ReportUpdateReq();
+                    firstMsg.setId(reportDTO.getId());
+                    firstMsg.setExecuteState(ReportStateEnum.EXECUTING.name());
+                    firstMsg.setEndTime(System.currentTimeMillis()); // <--- 加上这一行！
+                    log.info("准备发送状态 MQ...");
+                    kafkaTemplate.send(KafkaTopicConfig.REPORT_STATE_TOPIC_NAME, JsonUtil.obj2Json(firstMsg));
+                    log.info("状态 MQ 发送动作已完成！");
+
+
+                    // 使用异步执行，不阻塞当前的 Web 请求
+
+                    new Thread(() -> {
+                        try {
+                            // 在子线程里：从 Minio 下载 -> 解析 -> 压测
+                            runJmxStressCase(stressCaseDO, reportDTO);
+                        } catch (Exception e) {
+                            log.error("Error ", e);
+                            // 这里可以异步更新报告状态为“执行失败”
+                        }
+                    }, "Stress-Launcher-Thread").start();
+
+                    return 1;
+
+
                 } else if (StressSourceTypeEnum.SIMPLE.name().equalsIgnoreCase(stressCaseDO.getStressSourceType())) {
-                   // runJmxStressCase(stressCaseDO, reportDTO);
+
 
                 } else {
-                    //throw new BizException(BizCodeEnum.STRESS_UNSUPPORTED);
+                    throw new BizException(BizCodeEnum.STRESS_UNSUPPORTED);
 
                 }
-                JsonData.buildSuccess();
+
             }
+
 
 
         }
         return 0;
+
+    }
+
+    private void runJmxStressCase(StressCaseDO stressCaseDO, ReportDTO reportDTO) {
+        //创建引擎
+        BaseStressEngine stressEngine = new StressJmxEngine(stressCaseDO,reportDTO,applicationContext);
+
+        //运行压测
+       //stressEngine.startStressTest();
+
+        CompletableFuture.runAsync(() -> {
+            stressEngine.startStressTest();
+        });
 
     }
 

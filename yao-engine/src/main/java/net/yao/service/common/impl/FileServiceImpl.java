@@ -9,7 +9,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import net.yao.config.MinIoConfig;
 import net.yao.service.common.FileService;
-import net.yao.util.FileUtil;
+import net.yao.util.FileUtilYao;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +44,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String upload(MultipartFile file) {
 
-        String filename = FileUtil.getFileName(file.getOriginalFilename());
+        String filename = FileUtilYao.getFileName(file.getOriginalFilename());
 
         upload(file, filename);
 
@@ -78,9 +78,13 @@ public class FileServiceImpl implements FileService {
      */
     public String copyRemoteFileToLocalTempFile(String remoteFilePath) {
         // 拼接本地临时文件路径 指定文件存放在项目下的 static 文件夹中，要确保不会重复
-        String localTempFilePath = System.getProperty("user.dir")+ File.separator+"static"+File.separator + IdUtil.simpleUUID() + FileUtil.getSuffix(remoteFilePath);
-        // 创建临时文件夹
-        FileUtil.mkdir(localTempFilePath);
+        String localTempFilePath = System.getProperty("user.dir")+ File.separator+"static"+File.separator + IdUtil.simpleUUID() + FileUtilYao.getSuffix(remoteFilePath);
+//        // 创建临时文件夹
+//        FileUtilYao.mkdir(localTempFilePath);
+        // 获取父级目录路径
+        File localFileObject = new File(localTempFilePath);
+       // 创建父目录
+        FileUtilYao.mkdir(localFileObject.getParent());
         try {
             // 获取临时访问文件的URL地址
             String tempAccessFileUrl = getTempAccessFileUrl(remoteFilePath);

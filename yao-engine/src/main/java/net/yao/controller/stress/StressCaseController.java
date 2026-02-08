@@ -44,9 +44,22 @@ public class StressCaseController {
      */
     @GetMapping("/execute")
     public JsonData execute(@RequestParam("projectId")Long projectId,@RequestParam("id") Long caseId) {
-        stressCaseService.execute(projectId,caseId);
-        return JsonData.buildSuccess();
+//        stressCaseService.execute(projectId,caseId);
+//        return JsonData.buildSuccess();
+        try {
+            System.out.println("Interface execution start ：" + projectId + ", " + caseId);
+            stressCaseService.execute(projectId, caseId);
+            return JsonData.buildSuccess();
+        } catch (Exception e) {
+            e.printStackTrace(); // 在控制台打印具体的红色堆栈信息
+            return JsonData.buildError("Error：" + e.getMessage());
+        }
     }
+
+//    @GetMapping("/hello")
+//    public String hello() {
+//        return "I am alive";
+//    }
 
 
 

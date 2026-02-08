@@ -9,7 +9,7 @@ import net.yao.feign.ReportFeignService;
 import net.yao.model.StressCaseDO;
 import net.yao.req.ReportUpdateReq;
 import net.yao.service.common.ResultSenderService;
-import net.yao.util.FileUtil;
+import net.yao.util.FileUtilYao;
 import net.yao.util.StressTestUtil;
 import org.apache.jmeter.config.CSVDataSet;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -176,7 +176,7 @@ public abstract class BaseStressEngine {
             StressTestUtil.initJmeterProperties();
             SaveService.loadProperties();
             String dir = System.getProperty("user.dir") + File.separator+"static"+File.separator;
-            FileUtil.mkdir(dir);
+            FileUtilYao.mkdir(dir);
             String localJmxPath =  dir + IdUtil.simpleUUID()+".jmx";
             SaveService.saveTree(testPlanHashTree, new FileOutputStream(localJmxPath));
         }catch (Exception e){

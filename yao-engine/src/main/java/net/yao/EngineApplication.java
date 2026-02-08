@@ -11,7 +11,12 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class EngineApplication {
     public static void main(String[] args)
     {
-        SpringApplication.run(EngineApplication.class, args);
+        //SpringApplication.run(EngineApplication.class, args);
+        try {
+            SpringApplication.run(EngineApplication.class, args);
+        } catch (Exception e) {
+            e.printStackTrace(); // 强制打印出所有层级的报错
+        }
 
     }
 }

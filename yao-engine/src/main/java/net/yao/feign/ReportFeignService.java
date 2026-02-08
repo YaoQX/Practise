@@ -18,7 +18,6 @@ public interface ReportFeignService {
     @PostMapping("/api/v1/report/save")
     JsonData save(ReportSaveReq req);
 
-
     /**
      * 更新测试报告接口
      */
