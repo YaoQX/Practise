@@ -70,7 +70,11 @@ Planning to integrate **Sa-Token** to implement lightweight distributed authenti
 
 - MySQL  
 - Redis  
-- MinIO  
+- MinIO
+
+**Message**
+
+- Kafka  
 
 **Infrastructure**
 
