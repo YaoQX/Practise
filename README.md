@@ -35,17 +35,6 @@ Integration with **Selenium** is currently in progress to support UI automation 
 
 ---
 
-## Advanced Assertion Mechanism *(Planned)*
-
-Designing a dynamic response validation module based on **regular expressions** to enable automated verification of complex API responses and improve testing reliability.
-
----
-
-## Authentication & Authorization System *(Planned)*
-
-Planning to integrate **Sa-Token** to implement lightweight distributed authentication and RBAC-based authorization, ensuring secure access control and tenant-level isolation.
-
----
 
 ## Tech Stack
 
