@@ -19,7 +19,8 @@ public enum BizCodeEnum {
     STRESS_CASE_ID_NOT_EXIST(260002,"The test case ID does not exist"),
     STRESS_UNSUPPORTED(260005,"Unsupported pressure testing types"),
     STRESS_ASSERTION_UNSUPPORTED_ACTION(260007, "Unsupported assertion"),
-    STRESS_ASSERTION_UNSUPPORTED_FROM(260008, "Unsupported source of assertion");
+    STRESS_ASSERTION_UNSUPPORTED_FROM(260008, "Unsupported source of assertion"),
+    STRESS_REPORT_EXISTING(260009, "The pressure test is already running, please do not repeat it");
 
     @Getter
     private String message;

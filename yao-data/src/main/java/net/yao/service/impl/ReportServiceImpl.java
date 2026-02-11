@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.yao.config.KafkaTopicConfig;
 import net.yao.dto.ReportDTO;
 import net.yao.enums.ReportStateEnum;
+import net.yao.exception.BizException;
 import net.yao.mapper.ReportDetailStressMapper;
 import net.yao.mapper.ReportMapper;
 import net.yao.model.ReportDO;
@@ -18,6 +19,7 @@ import net.yao.util.SpringBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import net.yao.enums.BizCodeEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,19 +38,43 @@ public class ReportServiceImpl implements ReportService {
     private KafkaTemplate<String,String> kafkaTemplate;
 
     public ReportDTO save(ReportSaveReq req) {
+        // 1. 【核心：幂等检查】防止 8082 重试导致的重复插入
+        LambdaQueryWrapper<ReportDO> query = new LambdaQueryWrapper<>();
+        query.eq(ReportDO::getProjectId, req.getProjectId())
+                .eq(ReportDO::getCaseId, req.getCaseId())
+                .eq(ReportDO::getExecuteState, "EXECUTING"); // 或者用 ReportStateEnum.EXECUTING.name()
+
+        // 尝试查一下有没有正在跑的报告
+        ReportDO existingReport = reportMapper.selectOne(query);
+
+        if (existingReport != null) {
+            log.warn("Duplicate stress test request detected; report already exists：{}", existingReport.getId());
+            // 如果你希望 8082 拿到之前的报告继续跑，就直接返回旧的
+            return ReportDTO.builder()
+                    .id(existingReport.getId())
+                    .projectId(existingReport.getProjectId())
+                    .name(existingReport.getName())
+                    .build();
+
+            // 或者：如果你希望 8082 直接报错并停止，就抛出你刚才定义的枚举
+            // throw new BizException(BizCodeEnum.STRESS_REPORT_EXISTING);
+        }
+
+        // 2. 【原有插入逻辑】走到这里说明是全新的请求
         ReportDO reportDO = SpringBeanUtil.copyProperties(req, ReportDO.class);
         reportMapper.insert(reportDO);
 
-        ReportDTO reportDTO = ReportDTO.builder().id(reportDO.getId())
+        // 3. 【返回结果】使用你习惯的 Builder 模式
+        return ReportDTO.builder()
+                .id(reportDO.getId())
                 .projectId(reportDO.getProjectId())
-                .name(reportDO.getName()).build();
-
-        return reportDTO;
+                .name(reportDO.getName())
+                .build();
 
     }
 
     public void updateReportState(ReportUpdateReq req) {
-        System.err.println("🚀🚀🚀 updateReportState 确实跑了！ID=" + req.getId());
+
         ReportDTO reportDTO = ReportDTO.builder().id(req.getId()).executeState(req.getExecuteState()).endTime(req.getEndTime()).build();
 
         ReportDO reportDO = reportMapper.selectById(reportDTO.getId());
@@ -130,5 +156,8 @@ public class ReportServiceImpl implements ReportService {
 
 
     }
+
+
+
 
 }
