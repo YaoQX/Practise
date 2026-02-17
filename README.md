@@ -1,73 +1,167 @@
-# Distributed Cloud Load Testing Platform (Backend)
+# Distributed Cloud-Native Performance Testing Platform (Backend)
 
-A cloud-native distributed load testing backend platform designed to orchestrate automated performance testing through microservices architecture and API-driven execution.
+## 1. Project Overview
 
----
+This project is a cloud-native distributed performance testing backend platform built on a microservices architecture.
 
-## Self-developed Load Testing Execution Engine
+It is designed to orchestrate automated performance testing tasks and process large-scale test result data through asynchronous message pipelines.
 
-Decoupled and refactored JMeter’s core execution logic and integrated it into backend services, building an API-driven load testing engine capable of automated and concurrent test execution.
+The platform focuses on:
 
----
-
-## Microservices Architecture Design
-
-Implemented a microservices architecture using:
-
-- **Nacos** for service discovery and configuration management  
-- **OpenFeign** for inter-service communication  
-
-This design improves service decoupling, modular deployment, and system scalability.
+- Distributed test execution scheduling  
+- Decoupled service communication  
+- High-concurrency result processing  
+- Centralized test data storage  
 
 ---
 
-## Test Artifact Storage Solution
+## 2. System Architecture
 
-Designed an object storage system using **MinIO** to manage performance test artifacts such as reports, logs, and execution outputs, enabling centralized storage and efficient retrieval.
+The platform adopts a microservices architecture and is currently divided into the following core modules:
+
+| Module | Responsibility |
+|--------|----------------|
+| dcloud-engine | Performance test execution and scheduling |
+| dcloud-data | Test result processing and persistence |
+| dcloud-gateway | Unified traffic entry (Planned) |
+| dcloud-account | User and permission management (Planned) |
+| dcloud-common | Shared utilities and configuration module |
 
 ---
 
-## QA-driven Platform Design *(In progress)*
+## 3. Core Functionalities
 
-Leveraging hands-on QA experience, the platform is designed beyond traditional HTTP interface load testing.
+### 3.1 Test Execution Engine
 
-Integration with **Selenium** is currently in progress to support UI automation testing and expand end-to-end testing capabilities.
+A self-developed performance testing execution engine based on Apache JMeter.
+
+Key implementations:
+
+- Decoupled core execution logic of JMeter  
+- Encapsulated as a service-based backend execution component  
+- Supports triggering performance test tasks via API  
+- Achieved thousand-level concurrent execution on a single node  
 
 ---
 
+### 3.2 Asynchronous Result Processing Pipeline
 
-## Tech Stack
+To prevent performance test results from directly impacting the database, Kafka is introduced to build an asynchronous processing pipeline.
 
-**Backend**
+Execution flow:
+
+Engine → Kafka → Data → MySQL / MinIO
+
+
+Implementation effects:
+
+- Asynchronous transmission of test logs and reports  
+- Peak load buffering for database writes  
+- Improved system stability under high-load scenarios  
+- Enhanced throughput for large-scale result processing  
+
+---
+
+### 3.3 Microservices Architecture Design
+
+The system is built on the Spring Cloud Alibaba ecosystem.
+
+Core components include:
+
+- Nacos  
+  - Service registration and discovery  
+  - Configuration management  
+
+- OpenFeign  
+  - RPC communication between services  
+
+Architecture characteristics:
+
+- Service decoupling  
+- Independent deployment of modules  
+- Support for horizontal scaling  
+
+---
+
+### 3.4 Test Artifact Storage Strategy
+
+A layered storage design is implemented for handling large volumes of test data.
+
+| Data Type | Storage Solution |
+|-----------|------------------|
+| Structured data | MySQL |
+| Test reports / log files | MinIO |
+
+Features:
+
+- Centralized storage management  
+- Efficient retrieval and download  
+- Separation of structured and unstructured data  
+
+---
+
+## 4. QA-Oriented Platform Expansion (Planned)
+
+Based on QA automation testing experience, the platform is being extended from API performance testing to an integrated testing platform.
+
+Ongoing developments:
+
+- Integration of Selenium UI automation execution  
+- Extension of End-to-End (E2E) test orchestration capabilities  
+
+Target:
+
+- Unified platform combining API performance testing and UI automation testing  
+
+---
+
+## 5. Authentication and Gateway Design (Planned)
+
+Planned capabilities include:
+
+- API Gateway as unified traffic entry  
+- Token-based authentication (Sa-Token)   
+
+Designed to support:
+
+- Multi-user isolation  
+- Multi-tenant secure access  
+
+---
+
+## 6. Technology Stack
+
+### Backend Framework
 
 - Java 17  
 - Spring Boot 3.x  
 - MyBatis-Plus  
 
-**Microservices**
+### Microservices
 
 - Spring Cloud Alibaba  
 - Nacos  
 - OpenFeign  
 
-**Testing**
+### Testing Tools
 
 - Apache JMeter  
-- Selenium *(In progress)*  
+- Selenium (Planned)
 
-**Storage**
-
-- MySQL  
-- Redis  
-- MinIO
-
-**Message**
+### Messaging
 
 - Kafka  
 
-**Infrastructure**
+### Data Storage
 
-- AWS (EC2)  
+- MySQL  
+- Redis (Planned)  
+- MinIO  
+
+### Infrastructure
+
+- AWS EC2  
 - Docker  
 
 ---
+
