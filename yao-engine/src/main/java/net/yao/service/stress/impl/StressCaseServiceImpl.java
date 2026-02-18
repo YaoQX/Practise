@@ -126,10 +126,9 @@ public class StressCaseServiceImpl implements StressCaseService {
                     ReportUpdateReq firstMsg = new ReportUpdateReq();
                     firstMsg.setId(reportDTO.getId());
                     firstMsg.setExecuteState(ReportStateEnum.EXECUTING.name());
-                    firstMsg.setEndTime(System.currentTimeMillis()); // <--- 加上这一行！
-                    log.info("准备发送状态 MQ...");
+                    firstMsg.setEndTime(System.currentTimeMillis());
                     kafkaTemplate.send(KafkaTopicConfig.REPORT_STATE_TOPIC_NAME, JsonUtil.obj2Json(firstMsg));
-                    log.info("状态 MQ 发送动作已完成！");
+
 
 
                     // 使用异步执行，不阻塞当前的 Web 请求
@@ -174,6 +173,16 @@ public class StressCaseServiceImpl implements StressCaseService {
         CompletableFuture.runAsync(() -> {
             stressEngine.startStressTest();
         });
+
+    }
+
+    private void runSimpleStressCase(StressCaseDO stressCaseDO, ReportDTO reportDTO) {
+        EnvironmentDO environmentDO = environmentMapper.selectById(stressCaseDO.getEnvironmentId());
+        //创建引擎
+        BaseStressEngine stressEngine = new StressSimpleEngine(environmentDO,stressCaseDO,reportDTO,applicationContext);
+
+        //运行压测
+        stressEngine.startStressTest();
 
     }
 
