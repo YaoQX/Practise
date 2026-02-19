@@ -27,12 +27,12 @@ public class CSVDataFileDTO {
     /**
      * 分隔符
      */
-    private String delimeter;
+    private String delimiter;
 
     /**
      * 无视首行
      */
-    private boolean ignoreFirstLine = false;
+    private Boolean ignoreFirstLine = false;
 
     /**
      * 是否循环读取
