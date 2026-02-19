@@ -21,11 +21,11 @@ The platform adopts a microservices architecture and is currently divided into t
 
 | Module | Responsibility |
 |--------|----------------|
-| dcloud-engine | Performance test execution and scheduling |
-| dcloud-data | Test result processing and persistence |
+| dcloud-engine | Performance test execution and scheduling (In Progress) |
+| dcloud-data | Test result processing and persistence (In Progress)  |
 | dcloud-gateway | Unified traffic entry (Planned) |
 | dcloud-account | User and permission management (Planned) |
-| dcloud-common | Shared utilities and configuration module |
+| dcloud-common | Shared utilities and configuration module (In Progress) |
 
 ---
 
