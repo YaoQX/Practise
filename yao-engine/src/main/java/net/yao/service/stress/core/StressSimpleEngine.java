@@ -3,8 +3,11 @@ package net.yao.service.stress.core;
 
 import net.yao.dto.KeyValueDTO;
 import net.yao.dto.ReportDTO;
+import net.yao.dto.common.StressAssertionDTO;
 import net.yao.dto.common.ThreadGroupConfigDTO;
 import net.yao.dto.stress.CSVDataFileDTO;
+import net.yao.enums.StressAssertActionEnum;
+import net.yao.enums.StressAssertFieldFromEnum;
 import net.yao.model.EnvironmentDO;
 import net.yao.model.StressCaseDO;
 import net.yao.service.common.FileService;
@@ -146,7 +149,57 @@ public class StressSimpleEngine extends BaseStressEngine{
         return csvDataSetList;
     }
 
+    /**
+     * 创建响应断言列表
+     * 解析压测用例中的断言配置，转换为 JMeter 的 ResponseAssertion 组件
+     * @return List<ResponseAssertion>
+     */
     private List<ResponseAssertion> createResponseAssertionList() {
+        if (StringUtils.isBlank(stressCaseDO.getAssertion())) {
+            return null;
+        }
+        // 将数据库存的 JSON 字符串解析为 DTO 列表
+        List<StressAssertionDTO> assertionDTOList = JsonUtil.json2List(stressCaseDO.getAssertion(), StressAssertionDTO.class);
+
+        // 初始化结果列表
+        List<ResponseAssertion> responseAssertionList = new ArrayList<>(assertionDTOList.size());
+
+        // 遍历 DTO，逐个构建 JMeter 断言对象
+        for (StressAssertionDTO dto : assertionDTOList) {
+
+            ResponseAssertion assertion = new ResponseAssertion();
+
+            // 设置断言名称（显示在 JMeter 报告中）
+            assertion.setName(dto.getName());
+
+            // 核心配置：即使请求本身报错（如404），也先不要直接判断失败，而是走断言逻辑
+            assertion.setAssumeSuccess(false);
+
+            // A. 设置匹配规则 (使用 JDK 17 的增强 switch)
+            // 这里假设 StressAssertActionEnum.valueOf 会匹配字符串 "CONTAIN" 或 "EQUAL"
+            StressAssertActionEnum actionEnum = StressAssertActionEnum.valueOf(dto.getAction().toUpperCase());
+            switch (actionEnum) {
+                case CONTAIN -> assertion.setToContainsType(); // 包含匹配
+                case EQUAL -> assertion.setToEqualsType();     // 完全匹配
+                default -> throw new RuntimeException("Unknown Rule : " + dto.getAction());
+            }
+
+            // B. 设置数据来源 (从哪个字段取值比对)
+            StressAssertFieldFromEnum fieldFromEnum = StressAssertFieldFromEnum.valueOf(dto.getFrom().toUpperCase());
+            switch (fieldFromEnum) {
+                case RESPONSE_CODE -> assertion.setTestFieldResponseCode();   // 校验状态码
+                case RESPONSE_HEADER -> assertion.setTestFieldResponseHeaders(); // 校验响应头
+                case RESPONSE_DATA -> assertion.setTestFieldResponseData();     // 校验响应体
+                default -> throw new RuntimeException("Unknown source : " + dto.getFrom());
+            }
+
+            // 设置预期的目标值
+            assertion.addTestString(dto.getValue());
+            // 5. 将配置好的组件放入列表
+            responseAssertionList.add(assertion);
+        }
+
+        return responseAssertionList;
     }
 
     /**

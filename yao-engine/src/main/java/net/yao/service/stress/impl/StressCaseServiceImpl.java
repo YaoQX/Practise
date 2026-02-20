@@ -122,12 +122,9 @@ public class StressCaseServiceImpl implements StressCaseService {
                 //判断压测类型 JMX、SIMPLE 无视大小写
                 if (StressSourceTypeEnum.JMX.name().equalsIgnoreCase(stressCaseDO.getStressSourceType())) {
 
-                    // 【关键点】在这里发第一条 Kafka 消息，启动 8081 的监控
-                    ReportUpdateReq firstMsg = new ReportUpdateReq();
-                    firstMsg.setId(reportDTO.getId());
-                    firstMsg.setExecuteState(ReportStateEnum.EXECUTING.name());
-                    firstMsg.setEndTime(System.currentTimeMillis());
-                    kafkaTemplate.send(KafkaTopicConfig.REPORT_STATE_TOPIC_NAME, JsonUtil.obj2Json(firstMsg));
+
+                    // 关键：发送初始状态到 Kafka，通知监控模块（如大屏、实时统计）开始工作
+                    sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTING);
 
 
 
@@ -139,7 +136,7 @@ public class StressCaseServiceImpl implements StressCaseService {
                             runJmxStressCase(stressCaseDO, reportDTO);
                         } catch (Exception e) {
                             log.error("Error ", e);
-                            // 这里可以异步更新报告状态为“执行失败”
+                            sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
                         }
                     }, "Stress-Launcher-Thread").start();
 
@@ -147,6 +144,20 @@ public class StressCaseServiceImpl implements StressCaseService {
 
 
                 } else if (StressSourceTypeEnum.SIMPLE.name().equalsIgnoreCase(stressCaseDO.getStressSourceType())) {
+                    // 使用异步执行，不阻塞当前的 Web 请求
+
+                    new Thread(() -> {
+                        try {
+                            // 在子线程里：直接解析DB里结构并组装执行
+                            runSimpleStressCase(stressCaseDO, reportDTO);
+                        } catch (Exception e) {
+                            log.error("Error ", e);
+                            sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
+
+                        }
+                    }, "Stress-Launcher-Thread").start();
+
+                    return 1;
 
 
                 } else {
@@ -168,11 +179,8 @@ public class StressCaseServiceImpl implements StressCaseService {
         BaseStressEngine stressEngine = new StressJmxEngine(stressCaseDO,reportDTO,applicationContext);
 
         //运行压测
-       //stressEngine.startStressTest();
+        stressEngine.startStressTest();
 
-        CompletableFuture.runAsync(() -> {
-            stressEngine.startStressTest();
-        });
 
     }
 
@@ -183,6 +191,18 @@ public class StressCaseServiceImpl implements StressCaseService {
 
         //运行压测
         stressEngine.startStressTest();
+
+    }
+
+    /**
+     * 封装状态通知逻辑
+     */
+    private void sendReportStateUpdate(Long reportId, ReportStateEnum state) {
+        ReportUpdateReq msg = new ReportUpdateReq();
+        msg.setId(reportId);
+        msg.setExecuteState(state.name());
+        msg.setEndTime(System.currentTimeMillis());
+        kafkaTemplate.send(KafkaTopicConfig.REPORT_STATE_TOPIC_NAME, JsonUtil.obj2Json(msg));
 
     }
 
