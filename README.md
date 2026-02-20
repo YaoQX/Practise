@@ -1,8 +1,8 @@
-# Distributed Cloud-Native Performance Testing Platform (Backend)
+# Distributed Cloud-based Performance Testing Platform (Backend)
 
 ## 1. Project Overview
 
-This project is a cloud-native distributed performance testing backend platform built on a microservices architecture.
+This project is a cloud-based distributed performance testing backend platform built on a microservices architecture.
 
 It is designed to orchestrate automated performance testing tasks and process large-scale test result data through asynchronous message pipelines.
 
@@ -10,7 +10,7 @@ The platform focuses on:
 
 - Distributed test execution scheduling  
 - Decoupled service communication  
-- High-concurrency result processing  
+- Asynchronous result processing for concurrent test scenarios
 - Centralized test data storage  
 
 ---
@@ -40,7 +40,7 @@ Key implementations:
 - Decoupled core execution logic of JMeter  
 - Encapsulated as a service-based backend execution component  
 - Supports triggering performance test tasks via API  
-- Achieved thousand-level concurrent execution on a single node  
+- Validated hundred-to-thousand level concurrent execution scenarios in a single-node environment
 
 ---
 
@@ -79,7 +79,7 @@ Architecture characteristics:
 
 - Service decoupling  
 - Independent deployment of modules  
-- Support for horizontal scaling  
+- Designed with horizontal scalability considerations
 
 ---
 
