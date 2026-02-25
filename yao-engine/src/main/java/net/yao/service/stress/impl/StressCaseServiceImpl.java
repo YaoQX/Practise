@@ -31,6 +31,7 @@ import net.yao.util.SpringBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
@@ -101,7 +102,8 @@ public class StressCaseServiceImpl implements StressCaseService {
      * 【8】压测完成清理数数据
      * 【9】通知压测结束
      */
-    public int execute(Long projectId, Long caseId) {
+    @Async("YaoExecutor")
+    public void execute(Long projectId, Long caseId) {
         LambdaQueryWrapper <StressCaseDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StressCaseDO::getProjectId, projectId)
                 .eq(StressCaseDO::getId, caseId);
@@ -126,27 +128,20 @@ public class StressCaseServiceImpl implements StressCaseService {
                     // 关键：发送初始状态到 Kafka，通知监控模块（如大屏、实时统计）开始工作
                     sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTING);
 
+                    try {
+                        runJmxStressCase(stressCaseDO, reportDTO);
+                    } catch (Exception e) {
+                        log.error("JMX 压测执行异常", e);
+                        sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
+                    }
 
 
-                    // 使用异步执行，不阻塞当前的 Web 请求
-
-                    new Thread(() -> {
-                        try {
-                            // 在子线程里：从 Minio 下载 -> 解析 -> 压测
-                            runJmxStressCase(stressCaseDO, reportDTO);
-                        } catch (Exception e) {
-                            log.error("Error ", e);
-                            sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
-                        }
-                    }, "Stress-Launcher-Thread").start();
-
-                    return 1;
 
 
                 } else if (StressSourceTypeEnum.SIMPLE.name().equalsIgnoreCase(stressCaseDO.getStressSourceType())) {
                     // 使用异步执行，不阻塞当前的 Web 请求
 
-                    new Thread(() -> {
+
                         try {
                             // 在子线程里：直接解析DB里结构并组装执行
                             runSimpleStressCase(stressCaseDO, reportDTO);
@@ -155,9 +150,6 @@ public class StressCaseServiceImpl implements StressCaseService {
                             sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
 
                         }
-                    }, "Stress-Launcher-Thread").start();
-
-                    return 1;
 
 
                 } else {
@@ -170,7 +162,7 @@ public class StressCaseServiceImpl implements StressCaseService {
 
 
         }
-        return 0;
+
 
     }
 

@@ -14,5 +14,5 @@ public interface StressCaseService {
 
     int update(StressCaseUpdateReq req);
 
-    int execute(Long projectId, Long caseId);
+    void execute(Long projectId, Long caseId);
 }

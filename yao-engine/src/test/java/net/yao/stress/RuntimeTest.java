@@ -10,7 +10,7 @@ public class RuntimeTest {
             // 调⽤Jmeter执⾏脚本 必须要写进空文件夹
 
             Process process =
-                    Runtime.getRuntime().exec("D://apache-jmeter-5.4.1//bin/jmeter.bat -n -t /Users/Hachi/OneDrive/Desktop/jmx/HTTP_requestJson.jmx -l results.log -e -o /Users/Hachi/OneDrive/Desktop/fuck");
+                    Runtime.getRuntime().exec("D://apache-jmeter-5.4.1//bin/jmeter.bat -n -t /Users/Hachi/OneDrive/Desktop/jmx/HTTP_requestJson.jmx -l results.log -e -o /Users/Hachi/OneDrive/Desktop/jmx");
             // 读取Jmeter的输出
             BufferedReader reader = new BufferedReader(new
                                     InputStreamReader(process.getInputStream()));
