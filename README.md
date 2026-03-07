@@ -4,11 +4,9 @@
 
 This project is a backend platform for an automated testing system designed to unify different types of testing, including:
 
-API testing
-
-UI automation testing
-
-performance testing
+- API testing
+- UI automation testing
+- performance testing
 
 The goal of this platform is to improve the flexibility of traditional testing systems and provide a centralized backend for managing test execution and results.
 ---
@@ -104,21 +102,19 @@ Beyond performance testing, the platform is being expanded into a general automa
 
 Ongoing developments include:
 
-API testing task orchestration
-
-Basic assertion mechanisms for HTTP requests
-
-Integration of Selenium-based UI automation execution
+- API testing task orchestration
+- Basic assertion mechanisms for HTTP requests
+- Integration of Selenium-based UI automation execution
 
 Target:
 
 A unified platform supporting:
 
-API testing
+- API testing
 
-UI automation testing
+- UI automation testing
 
-performance testing
+- performance testing
 
 ---
 
