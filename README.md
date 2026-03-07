@@ -2,13 +2,23 @@
 
 ## 1. Project Overview
 
+The original motivation of this project comes from the limitations of traditional testing systems.
+In many development teams, different types of testing rely on separate tools such as:
+
+- Postman / Swagger for API testing
+- Selenium for UI automation
+- JMeter for performance testing
+- 
+These tools are often fragmented and difficult to integrate into a unified workflow.
+
+The goal of this project is to improve the flexibility of traditional testing systems and provide a centralized backend for managing test execution and results.
+
 This project is a backend platform for an automated testing system designed to unify different types of testing, including:
 
 - API testing
 - UI automation testing
 - performance testing
 
-The goal of this platform is to improve the flexibility of traditional testing systems and provide a centralized backend for managing test execution and results.
 ---
 
 ## 2. System Architecture
