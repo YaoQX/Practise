@@ -8,7 +8,7 @@ In many development teams, different types of testing rely on separate tools suc
 - Postman / Swagger for API testing
 - Selenium for UI automation
 - JMeter for performance testing
-- 
+
 These tools are often fragmented and difficult to integrate into a unified workflow.
 
 The goal of this project is to improve the flexibility of traditional testing systems and provide a centralized backend for managing test execution and results.
