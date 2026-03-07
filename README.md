@@ -1,18 +1,16 @@
-# Distributed Cloud-based Performance Testing Platform (Backend)
+# Distributed Cloud-based Automated Testing Platform (Backend)
 
 ## 1. Project Overview
 
-This project is a cloud-based distributed performance testing backend platform built on a microservices architecture.
+This project is a backend platform for an automated testing system designed to unify different types of testing, including:
 
-It is designed to orchestrate automated performance testing tasks and process large-scale test result data through asynchronous message pipelines.
+API testing
 
-The platform focuses on:
+UI automation testing
 
-- Distributed test execution scheduling  
-- Decoupled service communication  
-- Asynchronous result processing for concurrent test scenarios
-- Centralized test data storage  
+performance testing
 
+The goal of this platform is to improve the flexibility of traditional testing systems and provide a centralized backend for managing test execution and results.
 ---
 
 ## 2. System Architecture
@@ -100,18 +98,27 @@ Features:
 
 ---
 
-## 4. QA-Oriented Platform Expansion (Planned)
+## 4. API and UI Testing Capabilities (In Progress)
 
-Based on QA automation testing experience, the platform is being extended from API performance testing to an integrated testing platform.
+Beyond performance testing, the platform is being expanded into a general automated testing platform.
 
-Ongoing developments:
+Ongoing developments include:
 
-- Integration of Selenium UI automation execution  
-- Extension of End-to-End (E2E) test orchestration capabilities  
+API testing task orchestration
+
+Basic assertion mechanisms for HTTP requests
+
+Integration of Selenium-based UI automation execution
 
 Target:
 
-- Unified platform combining API performance testing and UI automation testing  
+A unified platform supporting:
+
+API testing
+
+UI automation testing
+
+performance testing
 
 ---
 
