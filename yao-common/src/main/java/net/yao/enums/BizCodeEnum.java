@@ -16,6 +16,7 @@ public enum BizCodeEnum {
      * 压测相关
      */
     STRESS_MODULE_ID_NOT_EXIST(260001,"Module id does not exist"),
+    STRESS_ENVIRONMENT_ID_NOT_EXIST(260001,"Environment id does not exist"),
     STRESS_CASE_ID_NOT_EXIST(260002,"The test case ID does not exist"),
     STRESS_UNSUPPORTED(260005,"Unsupported pressure testing types"),
     STRESS_ASSERTION_UNSUPPORTED_ACTION(260007, "Unsupported assertion"),

@@ -1,18 +1,35 @@
 package net.yao.controller.common;
 
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.yao.enums.BizCodeEnum;
 import net.yao.util.JsonData;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @RestController
 public class TestController {
+
+    private static Set<String> TOKEN_SET = new HashSet<>();
+
+    static {
+        TOKEN_SET.add("3a74fbbeb3114b38bc0f5b61296e8835");
+    }
+
+
+    @GetMapping("/api/v1/test/detail")
+    @ResponseBody
+    public JsonData detail(Long id) {
+        return JsonData.buildSuccess("传入id=" + id);
+    }
 
     @RequestMapping("/api/v1/test/login_form")
     public JsonData login(String mail,String password)
@@ -97,6 +114,25 @@ public class TestController {
         }
         return JsonData.buildSuccess("id="+id);
     }
+
+    @PostMapping("/api/v1/test/buy")
+    @ResponseBody
+    public JsonData buy(@RequestBody Map<String, Object> map, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        if (TOKEN_SET.contains(token)) {
+            map.put("order_id", IdUtil.simpleUUID());
+            return JsonData.buildSuccess(map);
+        } else {
+
+            TOKEN_SET.add(token);
+
+            return JsonData.buildError("Not login now");
+        }
+    }
+
+
+    /*******************/
+
 }
 
 

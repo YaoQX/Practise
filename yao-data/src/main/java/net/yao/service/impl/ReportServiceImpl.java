@@ -82,16 +82,18 @@ public class ReportServiceImpl implements ReportService {
             return;
         }
 
+
         //代码首先查出当前数据库中该测试报告的最新一条明细数据（oldReportDetailStressDO）
         LambdaQueryWrapper<ReportDetailStressDO> queryWrapper = new LambdaQueryWrapper<>(ReportDetailStressDO.class);
         queryWrapper.eq(ReportDetailStressDO::getReportId, reportDTO.getId());
         queryWrapper.orderByDesc(ReportDetailStressDO::getSamplerCount).last("limit 1");
+        //queryWrapper.orderByDesc(ReportDetailStressDO::getId).last("limit 1");
 
         // 获取第一个快照（注意：可能为 null）
         ReportDetailStressDO oldReportDetailStressDO = reportDetailStressMapper.selectOne(queryWrapper);
 
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
             log.error("Time too long,error");
             reportDO.setExecuteState(ReportStateEnum.EXECUTE_FAIL.name());
@@ -101,25 +103,31 @@ public class ReportServiceImpl implements ReportService {
 
         // 【安全检查】如果压测还没开始，newData 可能是 null
         if (newReportDetailStressDO == null) {
-            log.warn("尚未获取到明细数据，重新发送 MQ 等待...");
+            log.warn("Detailed data not yet received, resend to MQ and wait...");
             kafkaTemplate.send(KafkaTopicConfig.REPORT_STATE_TOPIC_NAME, "report_id_" + req.getId(), JsonUtil.obj2Json(req));
             return;
         }
 
-        // 安全获取数量，防止 null 导致方法中断
+        // 安全获取数量，防止 null 导致方法中断 oldCount<newCount
         long oldCount = (oldReportDetailStressDO == null) ? 0 : oldReportDetailStressDO.getSamplerCount();
         long newCount = newReportDetailStressDO.getSamplerCount();
 
+        // 比较最新一条数据的 ID，只要 ID 变大了，绝对有新数据进来
+//        long oldId = (oldReportDetailStressDO == null) ? 0 : oldReportDetailStressDO.getId();
+//        long newId = newReportDetailStressDO.getId();
 
-        if(newCount > oldCount){
-            System.err.println("🚀newCount > oldCount " );
+
+        if(oldCount<newCount){
+
             //有新数据，则重新发送MQ消息 说明又有新的压测明细入库了。压测还没彻底结束
             reportDO.setExecuteState(ReportStateEnum.COUNTING_REPORT.name());
             //于是代码重新发送一条 MQ 消息给自己，状态设为 COUNTING_REPORT，触发下一轮循环检查 去消费者
             kafkaTemplate.send(KafkaTopicConfig.REPORT_STATE_TOPIC_NAME,"report_id_"+reportDTO.getId(), JsonUtil.obj2Json(req));
+            return;
         }else {
             //没更新，则处理完成测试报告 视为执行成功
             reportDO.setExecuteState(ReportStateEnum.EXECUTE_SUCCESS.name());
+
 
         }
         // 处理聚合统计信息
@@ -136,8 +144,6 @@ public class ReportServiceImpl implements ReportService {
         }
 
         //处理聚合统计信息
-        reportDO.setEndTime(reportDTO.getEndTime());
-        reportDO.setExpandTime(reportDTO.getEndTime()-reportDO.getStartTime());
         reportDO.setQuantity(newReportDetailStressDO.getSamplerCount());
         reportDO.setFailQuantity(newReportDetailStressDO.getErrorCount());
         reportDO.setPassQuantity(reportDO.getQuantity()-reportDO.getFailQuantity());

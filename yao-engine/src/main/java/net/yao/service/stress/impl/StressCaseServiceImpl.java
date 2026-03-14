@@ -141,10 +141,14 @@ public class StressCaseServiceImpl implements StressCaseService {
                 } else if (StressSourceTypeEnum.SIMPLE.name().equalsIgnoreCase(stressCaseDO.getStressSourceType())) {
                     // 使用异步执行，不阻塞当前的 Web 请求
 
+                        // 关键：发送初始状态到 Kafka，通知监控模块（如大屏、实时统计）开始工作
+                        sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTING);
+
 
                         try {
                             // 在子线程里：直接解析DB里结构并组装执行
                             runSimpleStressCase(stressCaseDO, reportDTO);
+
                         } catch (Exception e) {
                             log.error("Error ", e);
                             sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
@@ -167,6 +171,7 @@ public class StressCaseServiceImpl implements StressCaseService {
     }
 
     private void runJmxStressCase(StressCaseDO stressCaseDO, ReportDTO reportDTO) {
+
         //创建引擎
         BaseStressEngine stressEngine = new StressJmxEngine(stressCaseDO,reportDTO,applicationContext);
 
@@ -177,7 +182,20 @@ public class StressCaseServiceImpl implements StressCaseService {
     }
 
     private void runSimpleStressCase(StressCaseDO stressCaseDO, ReportDTO reportDTO) {
-        EnvironmentDO environmentDO = environmentMapper.selectById(stressCaseDO.getEnvironmentId());
+
+
+        // 1. 获取关联的环境配置
+        Long envId = stressCaseDO.getEnvironmentId();
+        if (envId == null) {
+            throw new BizException(BizCodeEnum.STRESS_CASE_ID_NOT_EXIST);
+        }
+
+        EnvironmentDO environmentDO = environmentMapper.selectById(envId);
+        if (environmentDO == null) {
+            throw new BizException(BizCodeEnum.STRESS_ENVIRONMENT_ID_NOT_EXIST);
+        }
+
+
         //创建引擎
         BaseStressEngine stressEngine = new StressSimpleEngine(environmentDO,stressCaseDO,reportDTO,applicationContext);
 
