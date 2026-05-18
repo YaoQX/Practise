@@ -125,7 +125,7 @@ Key capabilities:
 - JSONPath and regular-expression based assertions
 - Validation of response status codes, headers, and response bodies
 - Parameter extraction from previous responses, such as tokens or user IDs
-- Placeholder-based parameter replacement using expressions like `{{token}}`
+- Placeholder-based parameter replacement using expressions
 - Recording of request details, response details, execution time, execution status, assertion result, and exception information
 - API test report generation with both summary and step-level details
 
