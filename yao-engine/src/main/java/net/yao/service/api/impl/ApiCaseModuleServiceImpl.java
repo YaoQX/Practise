@@ -42,7 +42,7 @@ public class ApiCaseModuleServiceImpl implements ApiCaseModuleService {
     private ApiCaseStepMapper apiCaseStepMapper;
 
     /**
-     * 根据项目ID获取ApiCaseModuleDTO列表
+     * 根据项目ID获取ApiCaseModuleDTO列表 先查模块 之后查模块的用例
      */
     @Override
     public List<ApiCaseModuleDTO> list(Long projectId) {

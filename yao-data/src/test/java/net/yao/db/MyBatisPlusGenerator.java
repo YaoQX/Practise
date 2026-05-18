@@ -22,7 +22,7 @@ public class MyBatisPlusGenerator {
         String targetModuleNamePath = "/yao-data";
         String dbName = "test_engine";
         String[] tables = {
-                "report", "report_detail_stress"
+                "report_detail_api"
         };
         // 数据源配置
         FastAutoGenerator.create("jdbc:mysql://" + serverInfo + "/" + dbName + "?useUnicode = true & characterEncoding = utf8 & useSSL = false & serverTimezone = Asia/Shanghai & tinyInt1isBit = true", userName,

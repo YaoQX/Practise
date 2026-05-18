@@ -3,6 +3,7 @@ package net.yao.dto.api;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ApiCaseDTO {
@@ -18,6 +19,8 @@ public class ApiCaseDTO {
     private String description;
 
     private String level;
+
+    private List<ApiCaseStepDTO> list;
 
     private Date gmtCreate;
 

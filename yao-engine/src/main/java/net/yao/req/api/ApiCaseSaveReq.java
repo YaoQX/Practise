@@ -2,6 +2,8 @@ package net.yao.req.api;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ApiCaseSaveReq {
     private Long id;
@@ -15,4 +17,6 @@ public class ApiCaseSaveReq {
     private String description;
 
     private String level;
+
+    private List<ApiCaseStepSaveReq> list;
 }

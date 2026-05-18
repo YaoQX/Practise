@@ -6,11 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.yao.config.KafkaTopicConfig;
 import net.yao.dto.ReportDTO;
 import net.yao.enums.ReportStateEnum;
+import net.yao.enums.TestTypeEnum;
 import net.yao.exception.BizException;
 import net.yao.mapper.ReportDetailStressMapper;
 import net.yao.mapper.ReportMapper;
 import net.yao.model.ReportDO;
+import net.yao.model.ReportDetailApiDO;
 import net.yao.model.ReportDetailStressDO;
+import net.yao.model.ReportDetailUiDO;
+import net.yao.req.ReportDelReq;
 import net.yao.req.ReportSaveReq;
 import net.yao.req.ReportUpdateReq;
 import net.yao.service.ReportService;
@@ -20,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import net.yao.enums.BizCodeEnum;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -162,6 +167,8 @@ public class ReportServiceImpl implements ReportService {
 
 
     }
+
+
 
 
 

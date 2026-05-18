@@ -20,10 +20,6 @@ public class TestController {
 
     private static Set<String> TOKEN_SET = new HashSet<>();
 
-    static {
-        TOKEN_SET.add("3a74fbbeb3114b38bc0f5b61296e8835");
-    }
-
 
     @GetMapping("/api/v1/test/detail")
     @ResponseBody
@@ -34,12 +30,31 @@ public class TestController {
     @RequestMapping("/api/v1/test/login_form")
     public JsonData login(String mail,String password)
     {
-        if(mail.startsWith("haha")){
-            return JsonData.buildError("Account Error");
+        if ("yao".equals(mail) && "123456".equals(password)) {
+            String token = IdUtil.simpleUUID();
+            TOKEN_SET.add(token);
+            return JsonData.buildSuccess(token);
         }
-        return JsonData.buildSuccess("mail="+mail+" password="+password);
+        return JsonData.buildError("Login failed, incorrect username and password.");
 
     }
+
+    /**
+     * form表单提交，不能json
+     * @param mail
+     * @param password
+     * @return
+     */
+    @RequestMapping("/api/v1/test/login_formtwo")
+    @ResponseBody
+    public JsonData logintwo(String mail, String password){
+
+        if(mail.startsWith("abc")){
+            return JsonData.buildError("Account Error.");
+        }
+        return JsonData.buildSuccess("mail="+mail+",pwd="+password);
+    }
+
 
 
 

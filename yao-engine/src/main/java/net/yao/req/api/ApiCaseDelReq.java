@@ -3,7 +3,7 @@ package net.yao.req.api;
 import lombok.Data;
 
 @Data
-public class ApiDelReq {
+public class ApiCaseDelReq {
 
     private Long id;
 

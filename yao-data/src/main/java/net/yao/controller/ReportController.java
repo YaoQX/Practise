@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import net.yao.config.KafkaTopicConfig;
 import net.yao.dto.ReportDTO;
+import net.yao.req.ReportDelReq;
 import net.yao.req.ReportSaveReq;
 import net.yao.req.ReportUpdateReq;
 import net.yao.service.ReportService;
@@ -36,5 +37,13 @@ public class ReportController
 
         return JsonData.buildSuccess();
     }
+
+//    @PostMapping("del")
+//    public JsonData delete(@RequestBody ReportDelReq req){
+//
+//        int  rows = reportService.delete(req);
+//
+//        return JsonData.buildSuccess(rows);
+//    }
 
 }

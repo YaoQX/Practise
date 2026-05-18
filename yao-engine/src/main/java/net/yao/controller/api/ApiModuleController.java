@@ -5,10 +5,7 @@ import net.yao.req.api.ApiModuleSaveReq;
 import net.yao.service.api.ApiModuleService;
 import net.yao.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/api_module")
@@ -34,12 +31,12 @@ public class ApiModuleController {
      * 根据Id删除
      */
     @GetMapping("/delete")
-    public JsonData delete(ApiModuleDelReq req) {
+    public JsonData delete(@RequestBody ApiModuleDelReq req) {
         return JsonData.buildSuccess(apiModuleService.delete(req.getId(),req.getProjectId()));
     }
 
     @GetMapping("/save")
-    public JsonData save(ApiModuleSaveReq req) {
+    public JsonData save(@RequestBody ApiModuleSaveReq req) {
         return JsonData.buildSuccess(apiModuleService.save(req));
     }
 

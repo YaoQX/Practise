@@ -21,7 +21,29 @@ public enum BizCodeEnum {
     STRESS_UNSUPPORTED(260005,"Unsupported pressure testing types"),
     STRESS_ASSERTION_UNSUPPORTED_ACTION(260007, "Unsupported assertion"),
     STRESS_ASSERTION_UNSUPPORTED_FROM(260008, "Unsupported source of assertion"),
-    STRESS_REPORT_EXISTING(260009, "The pressure test is already running, please do not repeat it");
+    STRESS_REPORT_EXISTING(260009, "The pressure test is already running, please do not repeat it"),
+    /**
+     * API操作
+     */
+    API_OPERATION_UNSUPPORTED_FROM(230004, "Unsupported source operations"),
+    API_OPERATION_UNSUPPORTED_ASSERTION(230005, "Unsupported assertion operations"),
+    API_OPERATION_UNSUPPORTED_RELATION(230006, "Unsupported associated values"),
+    API_RELATION_NOT_EXIST(230007, "Associated parameter does not exist"),
+    API_ASSERTION_FAILED(230008, "API assertion failed"),
+    API_FILE_NOT_EXIST(230010, "API uploaded file does not exist"),
+    API_CASE_STEP_IS_EMPTY(280404, "API test case step does not exist"),
+
+    UI_UNSUPPORTED_BROWSER_DRIVER(401000, "Browser driver is not supported"),
+    UI_ELEMENT_NOT_EXIST(401404, "Element locator does not exist"),
+    UI_OPERATION_UNSUPPORTED(401405, "Operation type is not supported"),
+    UI_OPERATION_UNSUPPORTED_BROWSER(401406, "Browser operation is not supported"),
+    UI_OPERATION_UNSUPPORTED_MOUSE(401407, "Mouse operation is not supported"),
+    UI_OPERATION_UNSUPPORTED_KEYBOARD(401408, "Keyboard operation is not supported"),
+    UI_OPERATION_UNSUPPORTED_WAIT(401409, "Wait operation is not supported"),
+    UI_OPERATION_UNSUPPORTED_ASSERTION(401410, "Assertion type is not supported"),
+
+    TEST_TYPE_UNSUPPORTED(504404, "Test type is not supported");
+
 
     @Getter
     private String message;
