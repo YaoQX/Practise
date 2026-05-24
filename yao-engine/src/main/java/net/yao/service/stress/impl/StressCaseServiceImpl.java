@@ -131,7 +131,7 @@ public class StressCaseServiceImpl implements StressCaseService {
                     try {
                         runJmxStressCase(stressCaseDO, reportDTO);
                     } catch (Exception e) {
-                        log.error("JMX 压测执行异常", e);
+                        log.error("JMX stress test execution error", e);
                         sendReportStateUpdate(reportDTO.getId(), ReportStateEnum.EXECUTE_FAIL);
                     }
 

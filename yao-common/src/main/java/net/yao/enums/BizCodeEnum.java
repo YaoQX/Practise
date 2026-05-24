@@ -42,7 +42,8 @@ public enum BizCodeEnum {
     UI_OPERATION_UNSUPPORTED_WAIT(401409, "Wait operation is not supported"),
     UI_OPERATION_UNSUPPORTED_ASSERTION(401410, "Assertion type is not supported"),
 
-    TEST_TYPE_UNSUPPORTED(504404, "Test type is not supported");
+    TEST_TYPE_UNSUPPORTED(504404, "Test type is not supported"),
+    UI_UNSUPPORTED_LOCATION_TYPE(504405,"Ui test type is not supported" );
 
 
     @Getter

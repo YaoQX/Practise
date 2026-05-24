@@ -100,6 +100,13 @@
             <version>2.9.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <!-- 建议使用 4.x 稳定版本，它原生支持了更强的显式等待和现代化 WebDriver 协议 -->
+            <version>4.18.1</version>
+        </dependency>
+
 
 
     </dependencies>
