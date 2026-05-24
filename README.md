@@ -110,20 +110,45 @@ Features:
 
 Beyond performance testing, the platform is being expanded into a general automated testing platform.
 
-Ongoing developments include:
+### 4.1 API Testing Module
 
-- API testing task orchestration
-- Basic assertion mechanisms for HTTP requests
-- Integration of Selenium-based UI automation execution
+The API testing module provides API test case execution, assertion validation, parameter correlation, and report generation.
+
+Each API test case consists of multiple ordered steps. Each step is configured in the database with request method, path, headers, query parameters, request body, body type, assertions, and parameter extraction rules.
+
+During execution, the engine dynamically builds HTTP requests using RESTAssured based on the step configuration and executes the steps in order. The module supports JSON requests, form-urlencoded requests, form-data requests, and binary file upload requests.
+
+Key capabilities:
+
+- Dynamic HTTP request construction based on database configurations
+- Ordered execution of multi-step API test cases
+- JSONPath and regular-expression based assertions
+- Validation of response status codes, headers, and response bodies
+- Parameter extraction from previous responses, such as tokens or user IDs
+- Placeholder-based parameter replacement using expressions
+- Recording of request details, response details, execution time, execution status, assertion result, and exception information
+- API test report generation with both summary and step-level details
+
+This design solves several common issues in manual API testing, such as repetitive request execution, complex parameter passing between APIs, and difficulty in tracing test results.
+
+### 4.2 UI Automation Testing
+
+Selenium-based UI automation execution is planned.
+
+Planned capabilities include:
+
+- Browser driver management
+- UI operation orchestration
+- Element locating and interaction
+- UI assertion support
+- UI test report generation
 
 Target:
 
 A unified platform supporting:
 
 - API testing
-
 - UI automation testing
-
 - performance testing
 
 ---
@@ -158,7 +183,8 @@ Designed to support:
 
 ### Testing Tools
 
-- Apache JMeter  
+- Apache JMeter
+- RESTAssured
 - Selenium (Planned)
 
 ### Messaging
