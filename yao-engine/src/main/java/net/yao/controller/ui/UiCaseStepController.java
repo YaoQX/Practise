@@ -1,23 +1,16 @@
-package net.xdclass.controller.ui;
+package net.yao.controller.ui;
 
 import jakarta.annotation.Resource;
-import net.xdclass.req.ui.UiCaseStepDelReq;
-import net.xdclass.req.ui.UiCaseStepSaveReq;
-import net.xdclass.req.ui.UiCaseStepUpdateReq;
-import net.xdclass.service.ui.UiCaseStepService;
-import net.xdclass.util.JsonData;
+import net.yao.req.ui.UiCaseStepDelReq;
+import net.yao.req.ui.UiCaseStepSaveReq;
+import net.yao.req.ui.UiCaseStepUpdateReq;
+import net.yao.service.ui.UiCaseStepService;
+import net.yao.util.JsonData;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 小滴课堂,愿景：让技术不再难学
- *
- * @Description
- * @Author 二当家小D
- * @Remark 有问题直接联系我，源码-笔记-技术交流群
- * @Version 1.0
- **/
+
 @RestController
 @RequestMapping("/api/v1/ui_case_step")
 public class UiCaseStepController {

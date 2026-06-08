@@ -1,4 +1,4 @@
-package net.xdclass.enums;
+package net.yao.enums;
 
 public enum PermissionEnum {
     PROJECT_AUTH,

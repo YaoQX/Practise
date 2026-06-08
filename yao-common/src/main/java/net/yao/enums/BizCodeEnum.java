@@ -43,7 +43,14 @@ public enum BizCodeEnum {
     UI_OPERATION_UNSUPPORTED_ASSERTION(401410, "Assertion type is not supported"),
 
     TEST_TYPE_UNSUPPORTED(504404, "Test type is not supported"),
-    UI_UNSUPPORTED_LOCATION_TYPE(504405,"Ui test type is not supported" );
+    UI_UNSUPPORTED_LOCATION_TYPE(504405,"Ui test type is not supported" ),
+
+
+    AUTH_NOT_LOGIN(401, "Not logged in or login expired, please log in again"),
+    AUTH_NO_PERMISSION(403, "Sorry, you do not have permission to operate this interface"),
+    SERVER_ERROR(500, "The system is malfunctioning, please try again later");
+
+
 
 
     @Getter

@@ -5,4 +5,8 @@ public interface ReportDetailService {
     void handleStressReportDetail(String topicContent);
 
     void handleApiReportDetail(String topicContent);
+
+    void handleUiReportDetail(String topicContent);
+
+
 }

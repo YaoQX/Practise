@@ -1,16 +1,13 @@
 package net.yao.mapper;
 
-import net.yao.model.PermissionDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import io.lettuce.core.dynamic.annotation.Param;
+import net.yao.model.PermissionDO;
 
-/**
- * <p>
- *  Mapper 接口
- * </p>
- *
- * @author 小滴课堂-二当家小D,
- * @since 2026-06-07
- */
+import java.util.List;
+
 public interface PermissionMapper extends BaseMapper<PermissionDO> {
+
+    List<String> findPermissionCodeList(@Param("accountId") Long accountId);
 
 }

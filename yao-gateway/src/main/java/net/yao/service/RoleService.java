@@ -1,4 +1,8 @@
 package net.yao.service;
 
-public class RoleService {
+import java.util.List;
+
+public interface RoleService {
+
+    List<String> findRoleCodeList(Long accountId);
 }

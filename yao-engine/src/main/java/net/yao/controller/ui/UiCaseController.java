@@ -1,23 +1,16 @@
-package net.xdclass.controller.ui;
+package net.yao.controller.ui;
 
 import io.swagger.v3.core.util.Json;
 import jakarta.annotation.Resource;
-import net.xdclass.dto.dto.UiCaseDTO;
-import net.xdclass.req.ui.UiCaseDelReq;
-import net.xdclass.req.ui.UiCaseSaveReq;
-import net.xdclass.req.ui.UiCaseUpdateReq;
-import net.xdclass.service.ui.UiCaseService;
-import net.xdclass.util.JsonData;
+import net.yao.dto.ui.UiCaseDTO;
+import net.yao.req.ui.UiCaseDelReq;
+import net.yao.req.ui.UiCaseSaveReq;
+import net.yao.req.ui.UiCaseUpdateReq;
+import net.yao.service.ui.UiCaseService;
+import net.yao.util.JsonData;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * 小滴课堂,愿景：让技术不再难学
- *
- * @Description
- * @Author 二当家小D
- * @Remark 有问题直接联系我，源码-笔记-技术交流群
- * @Version 1.0
- **/
+
 @RestController
 @RequestMapping("/api/v1/ui_case")
 public class UiCaseController {
@@ -38,7 +31,6 @@ public class UiCaseController {
     }
 
 
-
     @RequestMapping("/find")
     public JsonData find(@RequestParam("projectId") Long projectId, @RequestParam("id") Long caseId)
     {
@@ -54,8 +46,6 @@ public class UiCaseController {
     {
         return JsonData.buildSuccess(uiCaseService.save(req));
     }
-
-
 
     @GetMapping("/execute")
     public JsonData execute(@RequestParam("projectId") Long projectId, @RequestParam("id") Long caseId){

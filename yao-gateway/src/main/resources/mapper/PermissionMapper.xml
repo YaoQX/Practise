@@ -17,4 +17,15 @@
         id, name, code, description, gmt_create, gmt_modified
     </sql>
 
+    <!-- 获取权限编码列表 通过账户ID -->
+    <select id="findPermissionCodeList" resultType="string">
+        SELECT `p`.`code`
+        FROM `account_role` AS `ar`
+                 LEFT JOIN `role_permission` AS `rp`
+                           ON `ar`.`role_id` = `rp`.`role_id`
+                 LEFT JOIN `permission` AS `p`
+                           ON `rp`.`permission_id` = `p`.`id`
+        WHERE `ar`.`account_id`= ${accountId}
+    </select>
+
 </mapper>

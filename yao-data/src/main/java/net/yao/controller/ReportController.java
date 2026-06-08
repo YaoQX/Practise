@@ -38,12 +38,4 @@ public class ReportController
         return JsonData.buildSuccess();
     }
 
-//    @PostMapping("del")
-//    public JsonData delete(@RequestBody ReportDelReq req){
-//
-//        int  rows = reportService.delete(req);
-//
-//        return JsonData.buildSuccess(rows);
-//    }
-
 }

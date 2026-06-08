@@ -10,7 +10,7 @@ public interface UiCaseService {
 
     UiCaseDTO find(Long projectId, Long caseId);
 
-    int Delete(UiCaseDelReq req);
+    int delete(UiCaseDelReq req);
 
     int update(UiCaseUpdateReq req);
 

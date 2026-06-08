@@ -1,5 +1,6 @@
 package net.yao.util;
 
+import net.yao.dto.UiCaseStepDTO;
 import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -36,4 +37,15 @@ public class SpringBeanUtil {
         sourceList.forEach(item -> targetList.add(copyProperties(item, target)));//循环调用上面方法
         return targetList;
     }
+
+    /**
+     * 自动把一个对象里所有名字相同的属性，一键复制到另一个对象中去
+     * @param source 源对象
+     * @param target 目标对象
+     */
+
+    public static void copyProperties(Object source, Object target){
+        BeanUtils.copyProperties(source,target);
+    }
+
 }

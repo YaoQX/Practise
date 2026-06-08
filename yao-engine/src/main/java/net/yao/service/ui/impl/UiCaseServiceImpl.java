@@ -1,7 +1,9 @@
 package net.yao.service.ui.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import net.yao.dto.ReportDTO;
+import net.yao.dto.UiCaseResultDTO;
 import net.yao.dto.UiCaseStepDTO;
 import net.yao.dto.common.CaseInfoDTO;
 import net.yao.dto.ui.UiCaseDTO;
@@ -17,6 +19,7 @@ import net.yao.req.ui.UiCaseDelReq;
 import net.yao.req.ui.UiCaseSaveReq;
 import net.yao.req.ui.UiCaseUpdateReq;
 import net.yao.service.ui.UiCaseService;
+import net.yao.service.ui.core.UiExecuteEngine;
 import net.yao.util.JsonData;
 import net.yao.util.SpringBeanUtil;
 import org.checkerframework.checker.units.qual.A;
@@ -37,6 +40,7 @@ public class UiCaseServiceImpl implements UiCaseService {
     @Autowired
     private UiCaseStepMapper uiCaseStepMapper;
 
+    @Autowired
     private ReportFeignService reportFeignService;
 
     /**
@@ -139,17 +143,17 @@ public class UiCaseServiceImpl implements UiCaseService {
             caseInfoDTO.setModuleId(uiCaseDO.getModuleId());
             caseInfoDTO.setName(uiCaseDO.getName());
 
-            UiExecuteEngine
+            UiExecuteEngine uiExecuteEngine = new UiExecuteEngine(reportDTO);
+
+            UiCaseResultDTO uiCaseResultDTO = uiExecuteEngine.execute(caseInfoDTO, uiCaseDO.getBrowser(), stepList);
+
+            return JsonData.buildSuccess(uiCaseResultDTO);
 
         }
         else{
             log.error("Initializing the test UI report failed, reason:：{}",jsonData.getMsg());
             return JsonData.buildError("Initializing the test UI report failed");
         }
-
-
-
-
 
     }
 

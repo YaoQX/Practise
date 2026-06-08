@@ -58,7 +58,7 @@ public class MQListener {
     public void onStressReportStateMessage(ConsumerRecord<?,?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
         //打印消息
 
-        log.info("Consumer topic：{},Partition：{} Get message：{}",record.topic(),record.partition(),record.value());
+        log.info("Consumer topic：{},Consumer topic：{} Get message：{}",record.topic(),record.partition(),record.value());
         ReportUpdateReq reportUpdateReq = JsonUtil.json2Obj(record.value().toString(), ReportUpdateReq.class);
 
         reportService.updateReportState(reportUpdateReq);
@@ -74,8 +74,22 @@ public class MQListener {
     @KafkaListener(topics = {KafkaTopicConfig.API_TOPIC_NAME},groupId = "yao-api-test-gp")
     public void onApiReportDetailMessage(ConsumerRecord<?,?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
         //打印消息
-        log.info("消费主题：{},分区：{} 收到消息：{}",record.topic(),record.partition(),record.value());
+        log.info("Consumer topic：{},Consumer topic：{} Get message：{}",record.topic(),record.partition(),record.value());
         reportDetailService.handleApiReportDetail(record.value().toString());
+        ack.acknowledge();
+    }
+
+    /**
+     * 消费监听，UI自动化测试日志详情
+     * @param record
+     * @param ack
+     * @param topic
+     */
+    @KafkaListener(topics = {KafkaTopicConfig.UI_TOPIC_NAME},groupId = "yao-ui-test-gp")
+    public void onUiReportDetailMessage(ConsumerRecord<?,?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic){
+        //打印消息
+        log.info("Consumer topic：{},Consumer topic：{} Get message：{}",record.topic(),record.partition(),record.value());
+        reportDetailService.handleUiReportDetail(record.value().toString());
         ack.acknowledge();
     }
 

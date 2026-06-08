@@ -1,4 +1,8 @@
-package net.yao;
+package net.yao.service;
 
-public class PermissionService {
+import java.util.List;
+
+public interface PermissionService {
+
+    List<String> findPermissionCodeList(Long accountId);
 }
