@@ -62,10 +62,10 @@ public class SaTokenConfig {
 
                     // 如果是预检请求，则立即返回到前端
                     SaRouter.match(SaHttpMethod.OPTIONS)
-                            .free(r -> System.out.println("--------OPTIONS预检请求，不做处理-------"))
+                            .free(r -> System.out.println("--------OPTIONS: Preflight requests, do not process.-------"))
                             .back();
 
-                    // 统一格式返回给前端：不要用 SaResult，改成跟你业务完全一致的 JsonData
+                    // 统一格式返回给前端：不要用 SaResult，改成跟业务完全一致的 JsonData
                     if (e instanceof NotLoginException) {
                         return JsonData.buildResult(BizCodeEnum.AUTH_NOT_LOGIN);
                     }
