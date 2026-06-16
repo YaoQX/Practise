@@ -1,4 +1,4 @@
-package net.yao.mapper;
+package net.yao.accountmapper;
 
 import net.yao.model.AccountDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

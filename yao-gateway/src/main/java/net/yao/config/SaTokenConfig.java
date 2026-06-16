@@ -7,14 +7,15 @@ import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.router.SaHttpMethod;
 import cn.dev33.satoken.router.SaRouter;
 import cn.dev33.satoken.stp.StpUtil;
-import net.yao.enums.BizCodeEnum;
+import cn.dev33.satoken.util.SaResult;
 import net.yao.enums.PermissionEnum;
-import net.yao.util.JsonData;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SaTokenConfig {
 
+    @Bean
     public SaReactorFilter getSaReactorFilter() {
         return new SaReactorFilter()
                 // 1. 拦截所有进来的请求路径
@@ -52,29 +53,27 @@ public class SaTokenConfig {
                 })
                  //  4.异常处理方法（每次 setAuth 出现异常时进入）
                 .setError(e -> {
-                    // 万一拦截了，必须在这里重新补上跨域头，否则前端浏览器会直接报 CORS 跨域错误
+                    return SaResult.error(e.getMessage());
+                }).setBeforeAuth(obj -> {
                     SaHolder.getResponse()
+
+                            // ---------- 设置跨域响应头 ----------
+                            // 允许指定域访问跨域资源
                             .setHeader("Access-Control-Allow-Origin", "*")
+                            // 允许所有请求方式
                             .setHeader("Access-Control-Allow-Methods", "*")
+                            // 允许的header参数
                             .setHeader("Access-Control-Allow-Headers", "*")
+                            // 有效时间
                             .setHeader("Access-Control-Max-Age", "3600")
-                            .setHeader("Content-Type", "application/json;charset=UTF-8"); // 防止中文乱码
+                    ;
 
                     // 如果是预检请求，则立即返回到前端
                     SaRouter.match(SaHttpMethod.OPTIONS)
-                            .free(r -> System.out.println("--------OPTIONS: Preflight requests, do not process.-------"))
+                            .free(r -> System.out.println("--------OPTIONS预检请求，不做处理-------"))
                             .back();
-
-                    // 统一格式返回给前端：不要用 SaResult，改成跟业务完全一致的 JsonData
-                    if (e instanceof NotLoginException) {
-                        return JsonData.buildResult(BizCodeEnum.AUTH_NOT_LOGIN);
-                    }
-                    if (e instanceof NotPermissionException) {
-                        return JsonData.buildResult(BizCodeEnum.AUTH_NO_PERMISSION);
-                    }
-
-                    // 兜底的其他内部未知崩溃异常
-                    return JsonData.buildResult(BizCodeEnum.SERVER_ERROR);
                 });
+
+
     }
 }

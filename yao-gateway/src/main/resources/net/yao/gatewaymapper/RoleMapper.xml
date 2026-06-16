@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.yao.mapper.PermissionMapper">
+<mapper namespace="net.yao.gatewaymapper.RoleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="net.yao.model.PermissionDO">
+    <resultMap id="BaseResultMap" type="net.yao.model.RoleDO">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="code" property="code" />
@@ -17,15 +17,13 @@
         id, name, code, description, gmt_create, gmt_modified
     </sql>
 
-    <!-- 获取权限编码列表 通过账户ID -->
-    <select id="findPermissionCodeList" resultType="string">
-        SELECT `p`.`code`
-        FROM `account_role` AS `ar`
-                 LEFT JOIN `role_permission` AS `rp`
-                           ON `ar`.`role_id` = `rp`.`role_id`
-                 LEFT JOIN `permission` AS `p`
-                           ON `rp`.`permission_id` = `p`.`id`
-        WHERE `ar`.`account_id`= ${accountId}
+    <!-- 获取角色编码列表 通过账户ID -->
+    <select id="findRoleCodeList" resultType="string">
+        SELECT r.code
+        FROM account_role AS ar
+                 LEFT JOIN  role AS r
+                            ON r.id = ar.role_id
+        WHERE ar.account_id = ${accountId}
     </select>
 
 </mapper>

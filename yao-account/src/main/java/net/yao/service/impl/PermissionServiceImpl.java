@@ -1,7 +1,7 @@
 package net.yao.service.impl;
 
 import net.yao.dto.PermissionDTO;
-import net.yao.mapper.PermissionMapper;
+import net.yao.accountmapper.PermissionMapper;
 import net.yao.model.PermissionDO;
 import net.yao.service.PermissionService;
 import net.yao.util.SpringBeanUtil;

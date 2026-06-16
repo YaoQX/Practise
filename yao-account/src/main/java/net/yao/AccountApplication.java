@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableFeignClients
 @EnableDiscoveryClient
 @EnableAsync
+@MapperScan("net.yao.accountmapper")
 public class AccountApplication {
     public static void main(String[] args) {
 

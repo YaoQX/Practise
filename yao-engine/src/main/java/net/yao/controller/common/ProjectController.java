@@ -1,6 +1,6 @@
 package net.yao.controller.common;
 
-import jakarta.servlet.http.HttpServletRequest;
+
 import net.yao.req.common.ProjectDelReq;
 import net.yao.req.common.ProjectSaveReq;
 import net.yao.req.common.ProjectUpdateReq;
@@ -34,8 +34,8 @@ public class ProjectController {
     }
 
     @RequestMapping("/delete")
-    public JsonData delete(@RequestBody Long id) {
-        return JsonData.buildSuccess(projectService.delete(id));
+    public JsonData delete(@RequestBody ProjectDelReq req){
+        return JsonData.buildSuccess(projectService.delete(req.getId()));
     }
 
 }

@@ -1,4 +1,4 @@
-package net.yao.mapper;
+package net.yao.gatewaymapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import net.yao.model.RoleDO;

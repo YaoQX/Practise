@@ -1,6 +1,6 @@
 package net.yao.service.impl;
 
-import net.yao.mapper.RoleMapper;
+import net.yao.gatewaymapper.RoleMapper;
 import net.yao.service.RoleService;
 
 import org.springframework.beans.factory.annotation.Autowired;

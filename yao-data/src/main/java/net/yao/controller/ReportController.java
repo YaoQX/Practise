@@ -1,17 +1,23 @@
 package net.yao.controller;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.yao.config.KafkaTopicConfig;
+import net.yao.controller.req.ReportExportReq;
 import net.yao.dto.ReportDTO;
+import net.yao.dto.ReportExcelDTO;
 import net.yao.req.ReportDelReq;
 import net.yao.req.ReportSaveReq;
 import net.yao.req.ReportUpdateReq;
 import net.yao.service.ReportService;
+import net.yao.util.ExcelUtil;
 import net.yao.util.JsonData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,6 +42,12 @@ public class ReportController
         reportService.updateReportState(req);
 
         return JsonData.buildSuccess();
+    }
+
+    @GetMapping("/export")
+    public void exportReport(HttpServletResponse response, ReportExportReq req){
+        List<ReportExcelDTO> list = reportService.exportReport(req);
+        ExcelUtil.exportExcel(response,list,"Test Report");
     }
 
 }

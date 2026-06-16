@@ -1,4 +1,4 @@
-package net.yao.mapper;
+package net.yao.accountmapper;
 
 import net.yao.model.RoleDO;
 import net.yao.dto.AccountDTO;

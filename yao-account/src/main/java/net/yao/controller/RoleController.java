@@ -55,7 +55,7 @@ public class RoleController {
     /**
      * 查看全部角色列表
      */
-    @PostMapping("/api/permit/v1/role/list")
+    @GetMapping("/api/permit/v1/role/list")
     public JsonData list() {
         List<RoleDTO> list = roleService.list();
         return JsonData.buildSuccess(list);

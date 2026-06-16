@@ -4,11 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import net.yao.config.KafkaTopicConfig;
+import net.yao.controller.req.ReportExportReq;
 import net.yao.dto.ReportDTO;
+import net.yao.dto.ReportExcelDTO;
 import net.yao.enums.ReportStateEnum;
 import net.yao.enums.TestTypeEnum;
 import net.yao.exception.BizException;
+import net.yao.mapper.ReportDetailApiMapper;
 import net.yao.mapper.ReportDetailStressMapper;
+import net.yao.mapper.ReportDetailUiMapper;
 import net.yao.mapper.ReportMapper;
 import net.yao.model.ReportDO;
 import net.yao.model.ReportDetailApiDO;
@@ -27,6 +31,7 @@ import net.yao.enums.BizCodeEnum;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -38,6 +43,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private ReportDetailStressMapper reportDetailStressMapper;
+
+    @Autowired
+    private ReportDetailUiMapper reportDetailUiMapper;
+
+    @Autowired
+    private ReportDetailApiMapper reportDetailApiMapper;
 
     @Autowired
     private KafkaTemplate<String,String> kafkaTemplate;
@@ -166,6 +177,58 @@ public class ReportServiceImpl implements ReportService {
         reportMapper.updateById(reportDO);
 
 
+    }
+
+    public List<ReportExcelDTO> exportReport(ReportExportReq req) {
+        LambdaQueryWrapper<ReportDO> queryWrapper = new LambdaQueryWrapper<>(ReportDO.class);
+        //构建查询条件
+        if (req.getProjectId() != null){
+            queryWrapper.eq(ReportDO::getProjectId,req.getProjectId());
+        }
+        if (req.getCaseId() != null){
+            queryWrapper.eq(ReportDO::getCaseId,req.getCaseId());
+        }
+        if (req.getType() != null){
+            queryWrapper.eq(ReportDO::getType,req.getType());
+        }
+        if (req.getName() != null){
+            queryWrapper.like(ReportDO::getName,req.getName());
+        }
+        if (req.getStartTime() != null){
+            queryWrapper.ge(ReportDO::getStartTime,req.getStartTime());
+        }
+        if (req.getEndTime() != null){
+            queryWrapper.le(ReportDO::getEndTime,req.getEndTime());
+        }
+        queryWrapper.orderByDesc(ReportDO::getId);
+        List<ReportDO> reportDOS = reportMapper.selectList(queryWrapper);
+        List<ReportExcelDTO> reportExcelDTOS = SpringBeanUtil.copyProperties(reportDOS, ReportExcelDTO.class);
+        return reportExcelDTOS;
+    }
+
+    public int delete(ReportDelReq req) {
+
+        TestTypeEnum testTypeEnum = TestTypeEnum.valueOf(req.getType());
+        LambdaQueryWrapper<ReportDO> queryWrapper = new LambdaQueryWrapper<>(ReportDO.class);
+        queryWrapper.eq(ReportDO::getProjectId,req.getProjectId());
+        queryWrapper.eq(ReportDO::getId,req.getId());
+        int delete = reportMapper.delete(queryWrapper);
+        //根据不同的类型删除明细表
+        switch (testTypeEnum){
+            case STRESS:
+                reportDetailStressMapper.delete(new LambdaQueryWrapper<ReportDetailStressDO>().eq(ReportDetailStressDO::getReportId,req.getId()));
+                break;
+            case API:
+                reportDetailApiMapper.delete(new LambdaQueryWrapper<ReportDetailApiDO>().eq(ReportDetailApiDO::getReportId,req.getId()));
+                break;
+            case UI:
+                reportDetailUiMapper.delete(new LambdaQueryWrapper<ReportDetailUiDO>().eq(ReportDetailUiDO::getReportId,req.getId()));
+                break;
+            default:
+                log.error("Unsupported Type.");
+                break;
+        }
+        return delete;
     }
 
 
